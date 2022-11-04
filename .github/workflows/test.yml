@@ -25,7 +25,14 @@ jobs:
           repo: setup-node
           by_date: true
       - uses: ./
+        id: release
         with:
           owner: actions
           repo: setup-node
           by_date: false
+      - name: test output
+        run: |
+          echo "${{ steps.release.outputs.raw }}"
+          echo "${{ steps.release.outputs.clean }}"
+          echo "${{ steps.release.outputs.no_release }}"
+          echo "${{ steps.release.outputs.clean_no_release }}"
