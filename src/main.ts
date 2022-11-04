@@ -3,25 +3,29 @@ import {getOctokit} from '@actions/github'
 import {GitHub} from '@actions/github/lib/utils'
 import * as semver from 'semver'
 
-
-async function getLatestReleaseByDate(client: InstanceType<typeof GitHub>, owner: string, repo: string) {
-  let release = await client.rest.repos.getLatestRelease({
-    owner: owner,
-    repo: repo
-  })
+async function getLatestReleaseByDate(
+  client: InstanceType<typeof GitHub>,
+  owner: string,
+  repo: string
+): Promise<string> {
+  const release = await client.rest.repos.getLatestRelease({owner, repo})
   return release.data.tag_name
 }
 
-async function getLatestReleaseBySort(client: InstanceType<typeof GitHub>, owner: string, repo: string) {
-  var releases = await client.rest.repos.listReleases({
-    owner: owner,
-    repo: repo,
+async function getLatestReleaseBySort(
+  client: InstanceType<typeof GitHub>,
+  owner: string,
+  repo: string
+): Promise<string> {
+  const releases = await client.rest.repos.listReleases({
+    owner,
+    repo,
     per_page: 100
-  });
+  })
 
-  var tags = []
+  const tags = []
   for (const release of releases.data) {
-    let tag = release.tag_name
+    const tag = release.tag_name
     if (!semver.valid(tag)) {
       continue
     }
@@ -32,12 +36,14 @@ async function getLatestReleaseBySort(client: InstanceType<typeof GitHub>, owner
 }
 
 function stringToBool(string: string): Boolean {
-  if (string.toLowerCase() === "true") {
+  if (string.toLowerCase() === 'true') {
     return true
-  } else if (string.toLowerCase() === "false") {
+  } else if (string.toLowerCase() === 'false') {
     return false
   }
-  throw new Error("boolean type accepts the following values : [Ff]alse, [Tt]rue")
+  throw new Error(
+    'boolean type accepts the following values : [Ff]alse, [Tt]rue'
+  )
 }
 
 async function run(): Promise<void> {
@@ -49,16 +55,17 @@ async function run(): Promise<void> {
 
     const github = getOctokit(token)
 
+    let tag
     if (by_date) {
-      var tag = await getLatestReleaseByDate(github, owner, repo)
+      tag = await getLatestReleaseByDate(github, owner, repo)
     } else {
-      var tag = await getLatestReleaseBySort(github, owner, repo)
+      tag = await getLatestReleaseBySort(github, owner, repo)
     }
 
     core.setOutput('raw', tag)
     core.setOutput('clean', semver.clean(tag))
-    core.setOutput('no_release', tag.split("-")[0])
-    core.setOutput('clean_no_release', semver.clean(tag)?.split("-")[0])
+    core.setOutput('no_release', tag.split('-')[0])
+    core.setOutput('clean_no_release', semver.clean(tag)?.split('-')[0])
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
   }
