@@ -1,8 +1,8 @@
 {
-  "name": "typescript-action",
+  "name": "actions.get_release",
   "version": "0.0.0",
   "private": true,
-  "description": "TypeScript template action",
+  "description": "Gets latest release",
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",
@@ -15,17 +15,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/typescript-action.git"
+    "url": "git+https://github.com/bbrain-io/actions.get_release.git"
   },
   "keywords": [
     "actions",
-    "node",
-    "setup"
+    "github",
+    "release"
   ],
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.10.0"
+    "@actions/core": "^1.10.0",
+    "@actions/github": "^5.1.1",
+    "semver": "^7.3.8"
   },
   "devDependencies": {
     "@types/node": "^18.11.9",
