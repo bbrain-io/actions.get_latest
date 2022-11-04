@@ -44,23 +44,20 @@ const github_1 = __nccwpck_require__(5438);
 const semver = __importStar(__nccwpck_require__(1383));
 function getLatestReleaseByDate(client, owner, repo) {
     return __awaiter(this, void 0, void 0, function* () {
-        let release = yield client.rest.repos.getLatestRelease({
-            owner: owner,
-            repo: repo
-        });
+        const release = yield client.rest.repos.getLatestRelease({ owner, repo });
         return release.data.tag_name;
     });
 }
 function getLatestReleaseBySort(client, owner, repo) {
     return __awaiter(this, void 0, void 0, function* () {
-        var releases = yield client.rest.repos.listReleases({
-            owner: owner,
-            repo: repo,
+        const releases = yield client.rest.repos.listReleases({
+            owner,
+            repo,
             per_page: 100
         });
-        var tags = [];
+        const tags = [];
         for (const release of releases.data) {
-            let tag = release.tag_name;
+            const tag = release.tag_name;
             if (!semver.valid(tag)) {
                 continue;
             }
@@ -71,13 +68,13 @@ function getLatestReleaseBySort(client, owner, repo) {
     });
 }
 function stringToBool(string) {
-    if (string.toLowerCase() === "true") {
+    if (string.toLowerCase() === 'true') {
         return true;
     }
-    else if (string.toLowerCase() === "false") {
+    else if (string.toLowerCase() === 'false') {
         return false;
     }
-    throw new Error("boolean type accepts the following values : [Ff]alse, [Tt]rue");
+    throw new Error('boolean type accepts the following values : [Ff]alse, [Tt]rue');
 }
 function run() {
     var _a;
@@ -88,16 +85,17 @@ function run() {
             const owner = core.getInput('owner');
             const by_date = stringToBool(core.getInput('by_date'));
             const github = (0, github_1.getOctokit)(token);
+            let tag;
             if (by_date) {
-                var tag = yield getLatestReleaseByDate(github, owner, repo);
+                tag = yield getLatestReleaseByDate(github, owner, repo);
             }
             else {
-                var tag = yield getLatestReleaseBySort(github, owner, repo);
+                tag = yield getLatestReleaseBySort(github, owner, repo);
             }
             core.setOutput('raw', tag);
             core.setOutput('clean', semver.clean(tag));
-            core.setOutput('no_release', tag.split("-")[0]);
-            core.setOutput('clean_no_release', (_a = semver.clean(tag)) === null || _a === void 0 ? void 0 : _a.split("-")[0]);
+            core.setOutput('no_release', tag.split('-')[0]);
+            core.setOutput('clean_no_release', (_a = semver.clean(tag)) === null || _a === void 0 ? void 0 : _a.split('-')[0]);
         }
         catch (error) {
             if (error instanceof Error)
