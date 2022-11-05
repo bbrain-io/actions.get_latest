@@ -1,11 +1,31 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: "Get latest release tag"
+description: "Gets the latest release tag of a github repository"
+author: "Your name or organization here"
+
 inputs:
-  milliseconds: # change this
+  owner:
+    description: The repository owner
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+  repo:
+    description: The repository name
+    required: true
+  by_date:
+    description: Whether to sort releases by date or by tag
+    required: false
+    default: "false"
+  github-token:
+    description: The GitHub token used to create an authenticated client
+    default: ${{ github.token }}
+    required: false
+outputs:
+  raw:
+    description: "Raw tag retrieved from github"
+  clean:
+    description: "Tag cleaned"
+  no_release:
+    description: "Tag without release"
+  clean_no_release:
+    description: "Tag cleaned without release"
 runs:
-  using: 'node16'
-  main: 'dist/index.js'
+  using: "node16"
+  main: "dist/index.js"

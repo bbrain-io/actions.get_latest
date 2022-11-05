@@ -1,10 +1,10 @@
-name: 'build-test'
+name: "build-test"
 on: # rebuild any PRs and main branch changes
   pull_request:
   push:
     branches:
       - main
-      - 'releases/*'
+      - "releases/*"
 
 jobs:
   build: # make sure build/ci work properly
@@ -21,4 +21,18 @@ jobs:
       - uses: actions/checkout@v2
       - uses: ./
         with:
-          milliseconds: 1000
+          owner: actions
+          repo: setup-node
+          by_date: true
+      - uses: ./
+        id: release
+        with:
+          owner: actions
+          repo: setup-node
+          by_date: false
+      - name: test output
+        run: |
+          echo "${{ steps.release.outputs.raw }}"
+          echo "${{ steps.release.outputs.clean }}"
+          echo "${{ steps.release.outputs.no_release }}"
+          echo "${{ steps.release.outputs.clean_no_release }}"
